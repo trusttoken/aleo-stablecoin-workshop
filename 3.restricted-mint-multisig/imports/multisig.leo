@@ -44,13 +44,13 @@ program multisig.aleo {
         Mapping::set(proposals, proposal, 1u64);
     }
 
-    transition add_signer(ticket: ticket, new_signer: address) {
+    transition add_signer(ticket_: ticket, new_signer: address) {
         assert_eq(
-            ticket.program_address,
+            ticket_.program_address,
             aleo10frku8hz8zyyh03avmr2gjg6zyqz98g2fmcew96a50vxeke995qsuf90f2 // address("multisig.aleo")
         );
-        assert_eq(ticket.function_id, ADD_SIGNER_FN);
-        assert_eq(ticket.args_hash, BHP256::hash_to_field(new_signer));
+        assert_eq(ticket_.function_id, ADD_SIGNER_FN);
+        assert_eq(ticket_.args_hash, BHP256::hash_to_field(new_signer));
         return then finalize(new_signer);
     }
 
@@ -58,13 +58,13 @@ program multisig.aleo {
         Mapping::set(signers, new_signer, true);
     }
 
-    transition change_required_signatures(ticket: ticket, new_required_signatures: u64) {
+    transition change_required_signatures(ticket_: ticket, new_required_signatures: u64) {
         assert_eq(
-            ticket.program_address,
+            ticket_.program_address,
             aleo10frku8hz8zyyh03avmr2gjg6zyqz98g2fmcew96a50vxeke995qsuf90f2 // address("multisig.aleo")
         );
-        assert_eq(ticket.function_id, CHANGE_REQUIRED_SIGNATURES_FN);
-        assert_eq(ticket.args_hash, BHP256::hash_to_field(new_required_signatures));
+        assert_eq(ticket_.function_id, CHANGE_REQUIRED_SIGNATURES_FN);
+        assert_eq(ticket_.args_hash, BHP256::hash_to_field(new_required_signatures));
 
         return then finalize(new_required_signatures);
     }

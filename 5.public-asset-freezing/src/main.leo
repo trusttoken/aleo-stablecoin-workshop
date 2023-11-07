@@ -20,13 +20,13 @@ program token.aleo {
         amount: u64,
     }
 
-    transition mint(ticket: multisig.leo/ticket.record, args: MintArgs) -> token {
+    transition mint(ticket_: multisig.leo/ticket.record, args: MintArgs) -> token {
         assert_eq(
-            ticket.proposal.program_address,
+            ticket_.program_address,
             aleo16l909ch9c9zujjlthk47knk72zq0r4wd7eveqm8ukgta6cfszsgs4nd7p4 // address("token.aleo")
         );
-        assert_eq(ticket.proposal.function_id, MINT_FN);
-        assert_eq(ticket.proposal.args_hash, BHP256::hash_to_field(args));
+        assert_eq(ticket_.function_id, MINT_FN);
+        assert_eq(ticket_.args_hash, BHP256::hash_to_field(args));
 
         return token {
             owner: args.receiver,
@@ -34,7 +34,7 @@ program token.aleo {
         };
     }
 
-    transition transfer(kyc: kyc, sender: token, receiver: address, amount: u64) -> (kyc, token, token) {
+    transition transfer(kyc_: kyc, sender: token, receiver: address, amount: u64) -> (kyc, token, token) {
         let difference: u64 = sender.amount - amount;
 
         let remaining: token = token {
@@ -47,7 +47,7 @@ program token.aleo {
             amount: amount,
         };
 
-        return (kyc, remaining, transferred) then finalize(sender.owner, receiver);
+        return (kyc_, remaining, transferred) then finalize(sender.owner, receiver);
     }
 
     finalize transfer(sender: address, receiver: address) {
@@ -71,11 +71,11 @@ program token.aleo {
 
     transition freeze_address(ticket_: multisig.leo/ticket.record, to_freeze: address) {
         assert_eq(
-            ticket_.proposal.program_address,
+            ticket_.program_address,
             aleo16l909ch9c9zujjlthk47knk72zq0r4wd7eveqm8ukgta6cfszsgs4nd7p4 // address("token.aleo")
         );
-        assert_eq(ticket_.proposal.function_id, FREEZE_ADDRESS_FN);
-        assert_eq(ticket_.proposal.args_hash, BHP256::hash_to_field(to_freeze));
+        assert_eq(ticket_.function_id, FREEZE_ADDRESS_FN);
+        assert_eq(ticket_.args_hash, BHP256::hash_to_field(to_freeze));
 
         return then finalize(to_freeze);
     }
