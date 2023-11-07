@@ -47,7 +47,7 @@ program token.aleo {
             amount: amount,
         };
 
-        return (kyc_, remaining, transferred) then finalize(sender.owner, receiver);
+        return (kyc { owner: kyc_.owner }, remaining, transferred) then finalize(sender.owner, receiver);
     }
 
     finalize transfer(sender: address, receiver: address) {

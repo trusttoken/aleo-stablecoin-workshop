@@ -44,7 +44,7 @@ program token.aleo {
             amount: amount,
         };
 
-        return (kyc_, remaining, transferred);
+        return (kyc { owner: kyc_.owner }, remaining, transferred);
     }
 
     transition register(age: u64, nationality: field, social_id: u64) -> kyc {
