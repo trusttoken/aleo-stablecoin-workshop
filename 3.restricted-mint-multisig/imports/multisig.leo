@@ -14,13 +14,17 @@ program multisig.aleo {
 
     record ticket {
         owner: address,
-        proposal: Proposal,
+        program_address: address,
+        function_id: field,
+        args_hash: field,
     }
 
     transition mint_ticket(proposal: Proposal) -> ticket {
         return ticket {
             owner: self.caller,
-            proposal: proposal,
+            program_address: proposal.program_address,
+            function_id: proposal.function_id,
+            args_hash: proposal.args_hash,
         } then finalize(proposal);
     }
 
@@ -42,11 +46,11 @@ program multisig.aleo {
 
     transition add_signer(ticket: ticket, new_signer: address) {
         assert_eq(
-            ticket.proposal.program_address,
+            ticket.program_address,
             aleo10frku8hz8zyyh03avmr2gjg6zyqz98g2fmcew96a50vxeke995qsuf90f2 // address("multisig.aleo")
         );
-        assert_eq(ticket.proposal.function_id, ADD_SIGNER_FN);
-        assert_eq(ticket.proposal.args_hash, BHP256::hash_to_field(new_signer));
+        assert_eq(ticket.function_id, ADD_SIGNER_FN);
+        assert_eq(ticket.args_hash, BHP256::hash_to_field(new_signer));
         return then finalize(new_signer);
     }
 
@@ -56,11 +60,11 @@ program multisig.aleo {
 
     transition change_required_signatures(ticket: ticket, new_required_signatures: u64) {
         assert_eq(
-            ticket.proposal.program_address,
+            ticket.program_address,
             aleo10frku8hz8zyyh03avmr2gjg6zyqz98g2fmcew96a50vxeke995qsuf90f2 // address("multisig.aleo")
         );
-        assert_eq(ticket.proposal.function_id, CHANGE_REQUIRED_SIGNATURES_FN);
-        assert_eq(ticket.proposal.args_hash, BHP256::hash_to_field(new_required_signatures));
+        assert_eq(ticket.function_id, CHANGE_REQUIRED_SIGNATURES_FN);
+        assert_eq(ticket.args_hash, BHP256::hash_to_field(new_required_signatures));
 
         return then finalize(new_required_signatures);
     }
