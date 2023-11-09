@@ -55,18 +55,29 @@ program token.aleo {
         assert(!Mapping::get_or_use(frozen_addresses, receiver, false));
     }
 
-    transition register(age: u64, nationality: field, social_id: u64) -> kyc {
-        assert(age >= 18u64);
+    transition register_zpass(identity_: zpass.leo/identity.record) -> kyc {
+        assert(identity_.age >= 18u64);
         
-        if (nationality == 1field) {
-            assert(age >= 21u64);
+        if (identity_.nationality == 1field) {
+            assert(identity_.age >= 21u64);
         }
 
-        if (nationality == 2field) {
+        if (identity_.nationality == 2field) {
             // etc
         }
 
         return kyc { owner: self.caller };
+    }
+
+    transition register_multisig(ticket_: multisig.leo/ticket.record, receiver: address) -> kyc {
+        assert_eq(
+            ticket_.program_address,
+            aleo16l909ch9c9zujjlthk47knk72zq0r4wd7eveqm8ukgta6cfszsgs4nd7p4 // address("token.aleo")
+        );
+        assert_eq(ticket_.function_id, REGISTER_MULTISIG_FN);
+        assert_eq(ticket_.args_hash, BHP256::hash_to_field(receiver));
+
+        return kyc { owner: receiver };
     }
 
     transition freeze_address(ticket_: multisig.leo/ticket.record, to_freeze: address) {
