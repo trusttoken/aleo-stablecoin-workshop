@@ -1,5 +1,5 @@
 program token.aleo {
-    mapping owner: bool => address;
+    mapping owner_: bool => address;
     mapping pending_owner: bool => address;
 
     record token {
@@ -8,11 +8,11 @@ program token.aleo {
     }
 
     transition transfer_owner(new_owner: address) {
-        return then finalize(self.caller, new_owner: address);
+        return then finalize(self.caller, new_owner);
     }
 
     finalize transfer_owner(caller: address, new_owner: address) {
-        assert_eq(Mapping::get_or_use(owner, true, caller), caller);
+        assert_eq(Mapping::get_or_use(owner_, true, caller), caller);
         Mapping::set(pending_owner, true, new_owner);
     }
 
@@ -22,7 +22,7 @@ program token.aleo {
 
     finalize accept_owner(new_owner: address) {
         assert_eq(Mapping::get(pending_owner, true), new_owner);
-        Mapping::set(owner, true, new_owner);
+        Mapping::set(owner_, true, new_owner);
     }
 
     transition mint(receiver: address, amount: u64) -> token {
@@ -33,7 +33,7 @@ program token.aleo {
     }
 
     finalize mint(caller: address) {
-        assert_eq(Mapping::get(owner, true), caller);
+        assert_eq(Mapping::get(owner_, true), caller);
     }
 
     transition transfer(sender: token, receiver: address, amount: u64) -> (token, token) {
