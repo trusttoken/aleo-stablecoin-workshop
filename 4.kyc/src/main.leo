@@ -1,7 +1,9 @@
 import multisig.leo;
+import zpass.leo;
 
 program token.aleo {
     const MINT_FN: field = 1field;
+    const REGISTER_MULTISIG_FN: field = 2field;
 
     record token {
         owner: address,
@@ -48,10 +50,10 @@ program token.aleo {
     }
 
     transition register_zpass(identity_: zpass.leo/identity.record) -> kyc {
-        assert(identity_.age >= 18u64);
+        assert(identity_.age >= 18u8);
         
         if (identity_.nationality == 1field) {
-            assert(identity_.age >= 21u64);
+            assert(identity_.age >= 21u8);
         }
 
         if (identity_.nationality == 2field) {
