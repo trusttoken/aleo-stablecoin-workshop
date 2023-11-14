@@ -20,6 +20,7 @@ program token.aleo {
         );
         assert_eq(ticket_.function_id, MINT_FN);
         assert_eq(ticket_.args_hash, BHP256::hash_to_field(args));
+        multisig.leo/burn(ticket_);
 
         return token {
             owner: args.receiver,

@@ -73,4 +73,6 @@ program multisig.aleo {
     finalize change_required_signatures(new_required_signatures: u64) {
         Mapping::set(required_signatures, true, new_required_signatures);
     }
+
+    transition burn(ticket_: ticket) {}
 }

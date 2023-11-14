@@ -36,6 +36,7 @@ program token.aleo {
         );
         assert_eq(ticket_.function_id, MINT_FN);
         assert_eq(ticket_.args_hash, BHP256::hash_to_field(args));
+        multisig.leo/burn(ticket_);
 
         return token {
             owner: args.receiver,
@@ -90,6 +91,7 @@ program token.aleo {
         );
         assert_eq(ticket_.function_id, REGISTER_MULTISIG_FN);
         assert_eq(ticket_.args_hash, BHP256::hash_to_field(receiver));
+        multisig.leo/burn(ticket_);
 
         return kyc { owner: receiver };
     }
@@ -101,6 +103,7 @@ program token.aleo {
         );
         assert_eq(ticket_.function_id, FREEZE_ADDRESS_FN);
         assert_eq(ticket_.args_hash, BHP256::hash_to_field(to_freeze));
+        multisig.leo/burn(ticket_);
 
         return then finalize(to_freeze);
     }
@@ -116,6 +119,7 @@ program token.aleo {
         );
         assert_eq(ticket_.function_id, SET_PAUSER_FN);
         assert_eq(ticket_.args_hash, BHP256::hash_to_field(new_pauser));
+        multisig.leo/burn(ticket_);
 
         return then finalize(new_pauser);
     }
@@ -149,6 +153,7 @@ program token.aleo {
         );
         assert_eq(ticket_.function_id, UPGRADE_FN);
         assert_eq(ticket_.args_hash, BHP256::hash_to_field(new_implementation));
+        multisig.leo/burn(ticket_);
 
         return then finalize(new_implementation);
     }
