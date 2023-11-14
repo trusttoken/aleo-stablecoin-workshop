@@ -1,13 +1,17 @@
-# base.aleo
+# Aleo Stablecoin Workshop
+
+## Prerequisites
+* Leo https://developer.aleo.org/leo/installation 
 
 ## Build Guide
+To compile Aleo programs from this repository
 
-To compile this Aleo program, run:
+1. Enter subdirectory of interest, e.g.:
 ```bash
-snarkvm build
+cd 0.base
 ```
 
-To execute this Aleo program, run:
+2. Compile using `leo` tool:
 ```bash
-snarkvm run hello
+leo build
 ```
