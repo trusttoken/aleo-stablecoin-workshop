@@ -5,6 +5,12 @@ program multisig.aleo {
     mapping required_signatures: bool => u64;
     mapping proposals: Proposal => u64;
     mapping signers: address => bool;
+    mapping block: ProposalSigner => bool;
+
+    struct ProposalSigner {
+        proposal: Proposal,
+        signer: address,
+    }
 
     struct Proposal {
         program_address: address,
@@ -40,9 +46,18 @@ program multisig.aleo {
     }
 
     finalize sign(caller: address, proposal: Proposal) {
+        let temp: ProposalSigner = ProposalSigner {
+            proposal: proposal,
+            signer: caller,
+        };
+        let is_blocked: bool = Mapping::get_or_use(block, temp, false);
+        assert_eq(is_blocked, false);
+
         assert(Mapping::get(signers, caller));
         let signatures: u64 = Mapping::get_or_use(proposals, proposal, 0u64);
         Mapping::set(proposals, proposal, signatures + 1u64);
+
+        Mapping::set(block, temp, true);
     }
 
     transition add_signer(ticket_: ticket, new_signer: address) {
