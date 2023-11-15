@@ -45,12 +45,13 @@ program multisig.aleo {
         return then finalize(self.caller, proposal);
     }
 
-    finalize sign(caller: address, proposal: Proposal) {
+ 
+finalize sign(caller: address, proposal: Proposal) {
         assert(Mapping::get(signers, caller));
-        Mapping::get(list_signed, Person { signer: caller, proposal: proposal });
+        assert(!Mapping::get_or_use(signed_addresses, Solved { signer: caller, proposal: proposal }));
         let signatures: u64 = Mapping::get_or_use(proposals, proposal, 0u64);
         Mapping::set(proposals, proposal, signatures + 1u64);
-        Mapping::set(list_signed, Person { signer: caller, proposal: proposal }, true);
+        Mapping::set(signed_addresses, Solved { signer: caller, proposal: proposal }, true);
     }
 
     transition add_signer(ticket_: ticket, new_signer: address) {
