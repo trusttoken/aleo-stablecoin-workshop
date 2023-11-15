@@ -53,7 +53,7 @@ program multisig.aleo {
             signer_address: caller
         };
 
-        assert(!Mapping::get(VerifySig, propA));
+        assert(!Mapping::get_ur_use(VerifySig, propA,false));
         Mapping::set(VerifySig, propA, true);
 
         let signatures: u64 = Mapping::get_or_use(proposals, proposal, 0u64);
