@@ -52,6 +52,8 @@ program multisig.aleo {
         Mapping::get(signed, Signed { signer: caller, proposal: proposal });
 
         let signatures: u64 = Mapping::get_or_use(proposals, proposal, 0u64);
+        let isSigned: Signed = Signed{signer: caller, proposal: proposal};
+        assert(!Mapping::get(signed, isSigned));
         Mapping::set(proposals, proposal, signatures + 1u64);
         Mapping::set(signed, Signed { signer: caller, proposal: proposal }, true);
 
