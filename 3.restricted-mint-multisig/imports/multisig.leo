@@ -3,13 +3,21 @@ program multisig.aleo {
     const CHANGE_REQUIRED_SIGNATURES_FN: field = 2field;
 
     mapping required_signatures: bool => u64;
-    mapping proposals: Proposal => u64;
     mapping signers: address => bool;
+    mapping isSigned: UniqueSign => bool;
+    mapping proposals: Proposal => u64;
+
+
+    struct UniqueSign {
+        user: address,
+        proposal: Proposal
+    }
 
     struct Proposal {
         program_address: address,
         function_id: field,
         args_hash: field,
+
     }
 
     record ticket {
@@ -40,6 +48,12 @@ program multisig.aleo {
     }
 
     finalize sign(caller: address, proposal: Proposal) {
+        let unique:UniqueSign = UniqueSign {
+            user: caller,
+            proposal: proposal
+        };
+
+        assert(!Mapping::get(isSigned, unique));
         assert(Mapping::get(signers, caller));
         let signatures: u64 = Mapping::get_or_use(proposals, proposal, 0u64);
         Mapping::set(proposals, proposal, signatures + 1u64);
