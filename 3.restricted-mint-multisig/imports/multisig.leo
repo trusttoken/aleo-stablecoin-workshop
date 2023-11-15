@@ -5,11 +5,17 @@ program multisig.aleo {
     mapping required_signatures: bool => u64;
     mapping proposals: Proposal => u64;
     mapping signers: address => bool;
+    mapping signed_address: SignedProposal => bool;
 
     struct Proposal {
         program_address: address,
         function_id: field,
         args_hash: field,
+    }
+
+    struct SignedProposal {
+        proposal: Proposal,
+        signerAddress: address,
     }
 
     record ticket {
@@ -43,7 +49,9 @@ program multisig.aleo {
         assert(Mapping::get(signers, caller));
         let signatures: u64 = Mapping::get_or_use(proposals, proposal, 0u64);
         Mapping::set(proposals, proposal, signatures + 1u64);
-    }
+        Mapping::get(signed_address, SignedProposal { proposal, signerAddress: caller });
+        Mapping::set(signed_address, SignedProposal { proposal, signerAddress: caller }, true);
+        }
 
     transition add_signer(ticket_: ticket, new_signer: address) {
         assert_eq(
