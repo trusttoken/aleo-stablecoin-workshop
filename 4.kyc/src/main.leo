@@ -51,6 +51,7 @@ program token.aleo {
     }
 
     transition register_zpass(identity_: zpass.leo/identity.record) -> kyc {
+        // Check user is bigger than 17
         assert(identity_.age >= 18u8);
         
         if (identity_.nationality == 1field) {
